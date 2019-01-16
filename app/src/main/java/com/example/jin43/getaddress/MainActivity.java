@@ -2,17 +2,34 @@ package com.example.jin43.getaddress;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.database.Cursor;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+/* 작성자 : 김정진
+ * Native 전화번호부에서 이름과 전화번호 가져오기
+ * 참고한 블로그 : http://mainia.tistory.com/4924 [녹두장군 - 상상을 현실로]
+ */
 public class MainActivity extends AppCompatActivity {
 
     WebView web; // 웹뷰 선언
+    TextView testtx;
+    ArrayList<Map<String, String>> dataList;
     JSONObject jsonData; // 자바스크립트에서 값을 받을 json 변수 선언
 
     @SuppressLint("JavascriptInterface")
@@ -22,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         web = (WebView) findViewById(R.id.webView); //웹뷰 선언
+        testtx = (TextView) findViewById(R.id.testTx);
 
         // 웹뷰 세팅
         WebSettings webSet = web.getSettings();                   // 웹뷰 설정
@@ -42,8 +60,62 @@ public class MainActivity extends AppCompatActivity {
         }
         web.addJavascriptInterface(new WebAppInterface(this), "android");
 
-        web.loadUrl("https://www.google.com"); // 처음 로드할 페이지
+        web.loadUrl("file:///android_asset/test.html"); // 처음 로드할 페이지
 
+    }
+
+    public void getNativePhone() {
+        Log.d("JJKIM", "Native영역 전화번호부 정보 가져오기");
+        dataList = new ArrayList<Map<String, String>>();
+        Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
+                null, null, null,
+                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
+
+        while (c.moveToNext()) {
+            HashMap<String, String> map = new HashMap<String, String>();
+            // 연락처 id 값
+            String id = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
+            // 연락처 대표 이름
+            String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+            map.put("name", name);
+
+            // ID로 전화 정보 조회
+            Cursor phoneCursor = getContentResolver().query(
+                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                    null,
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
+                    null, null);
+
+            // 데이터가 있는 경우
+            if (phoneCursor.moveToFirst()) {
+                String number = phoneCursor.getString(phoneCursor.getColumnIndex(
+                        ContactsContract.CommonDataKinds.Phone.NUMBER));
+                map.put("phone", number);
+            }
+
+            phoneCursor.close();
+            dataList.add(map);
+        }// end while
+        c.close();
+
+        // JSON 으로 변환
+        try {
+            JSONArray jArray = new JSONArray();//배열이 필요할때
+            for (int i = 0; i < dataList.size(); i++) {
+                JSONObject sObject = new JSONObject();//배열 내에 들어갈 json
+                sObject.put("name", dataList.get(i).get("name"));
+                sObject.put("phonenum", dataList.get(i).get("phone"));
+                jArray.put(sObject);
+            }
+
+            Log.d("JSON Test", jArray.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+//        출처: http://mainia.tistory.com/5673 [녹두장군 - 상상을 현실로]
     }
 
     /* 안드로이드와 자바스크립트간의 데이터 주고 받기 */
@@ -54,6 +126,13 @@ public class MainActivity extends AppCompatActivity {
         /** Instantiate the interface and set the context */
         WebAppInterface(Context c) {
             mContext = c;
+        }
+
+        /* 전화번호부 가져오기*/
+        @JavascriptInterface
+        public void getPhone() {
+            Log.d("JJKIM", "Web JS에서 MainActivity쪽 function 호출");
+            getNativePhone();
         }
     }
 }

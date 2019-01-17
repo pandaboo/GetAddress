@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.os.Build;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     TextView testtx;
     ArrayList<Map<String, String>> dataList;
     JSONObject jsonData; // 자바스크립트에서 값을 받을 json 변수 선언
+    JSONArray jsonContacts; // 전화번호부에서 이름, 전화번호를 받아와 jsonarray형태로 변환 후 web단으로 넘기기 위한 변수
+
+    private final Handler handler = new Handler();
 
     @SuppressLint("JavascriptInterface")
     @Override
@@ -60,11 +64,11 @@ public class MainActivity extends AppCompatActivity {
         }
         web.addJavascriptInterface(new WebAppInterface(this), "android");
 
-        web.loadUrl("file:///android_asset/test.html"); // 처음 로드할 페이지
+        web.loadUrl("file:///android_asset/html/index.html"); // 처음 로드할 페이지
 
     }
 
-    public void getNativePhone() {
+    public void getNativeContacts() {
         Log.d("JJKIM", "Native영역 전화번호부 정보 가져오기");
         dataList = new ArrayList<Map<String, String>>();
         Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
@@ -100,22 +104,30 @@ public class MainActivity extends AppCompatActivity {
 
         // JSON 으로 변환
         try {
-            JSONArray jArray = new JSONArray();//배열이 필요할때
+            jsonContacts = new JSONArray();//배열이 필요할때
             for (int i = 0; i < dataList.size(); i++) {
-                JSONObject sObject = new JSONObject();//배열 내에 들어갈 json
-                sObject.put("name", dataList.get(i).get("name"));
-                sObject.put("phonenum", dataList.get(i).get("phone"));
-                jArray.put(sObject);
+                JSONObject tempContacts = new JSONObject();//배열 내에 들어갈 json
+                tempContacts.put("name", dataList.get(i).get("name"));
+                tempContacts.put("phonenum", dataList.get(i).get("phone"));
+                jsonContacts.put(tempContacts);
             }
 
-            Log.d("JSON Test", jArray.toString());
+            Log.d("JSON Test", jsonContacts.toString());
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
 //        출처: http://mainia.tistory.com/5673 [녹두장군 - 상상을 현실로]
+
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                String args = null;
+                if(jsonContacts != null) args = jsonContacts.toString();
+                Log.d("JJKIM", "jsonContacts = "+ args);
+                web.loadUrl("javascript:printContacts('" + args + "')"); // 해당 url의 자바스크립트 함수 호출
+            }
+        });
     }
 
     /* 안드로이드와 자바스크립트간의 데이터 주고 받기 */
@@ -130,9 +142,16 @@ public class MainActivity extends AppCompatActivity {
 
         /* 전화번호부 가져오기*/
         @JavascriptInterface
-        public void getPhone() {
+        public void callContacts() {
             Log.d("JJKIM", "Web JS에서 MainActivity쪽 function 호출");
-            getNativePhone();
+            getNativeContacts();
+        }
+
+        /* 푸시알림*/
+        @JavascriptInterface
+        public void callPush() {
+            Log.d("JJKIM", "Web JS에서 MainActivity쪽 function 호출");
+            getNativeContacts();
         }
     }
 }

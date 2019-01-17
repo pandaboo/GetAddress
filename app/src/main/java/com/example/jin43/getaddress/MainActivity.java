@@ -150,8 +150,7 @@ public class MainActivity extends AppCompatActivity {
         /* 푸시알림*/
         @JavascriptInterface
         public void callPush() {
-            Log.d("JJKIM", "Web JS에서 MainActivity쪽 function 호출");
-            getNativeContacts();
+            Log.d("JJKIM", "push 메소드 호출");
         }
     }
 }

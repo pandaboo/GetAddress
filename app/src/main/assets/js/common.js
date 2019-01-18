@@ -1,7 +1,3 @@
-function movePage() {
-    // blah
-}
-
 
 function common_movePage(url, jsonData) {
 

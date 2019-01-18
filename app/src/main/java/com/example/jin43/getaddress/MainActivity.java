@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     WebView web; // 웹뷰 선언
     TextView testtx;
-    ArrayList<Map<String, String>> dataList;
     JSONObject jsonData; // 자바스크립트에서 값을 받을 json 변수 선언
     JSONArray jsonContacts; // 전화번호부에서 이름, 전화번호를 받아와 jsonarray형태로 변환 후 web단으로 넘기기 위한 변수
 
@@ -70,54 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void getNativeContacts() {
         Log.d("JJKIM", "Native영역 전화번호부 정보 가져오기");
-        dataList = new ArrayList<Map<String, String>>();
-        Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI,
-                null, null, null,
-                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " asc");
-
-        while (c.moveToNext()) {
-            HashMap<String, String> map = new HashMap<String, String>();
-            // 연락처 id 값
-            String id = c.getString(c.getColumnIndex(ContactsContract.Contacts._ID));
-            // 연락처 대표 이름
-            String name = c.getString(c.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
-            map.put("name", name);
-
-            // ID로 전화 정보 조회
-            Cursor phoneCursor = getContentResolver().query(
-                    ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-                    null,
-                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = " + id,
-                    null, null);
-
-            // 데이터가 있는 경우
-            if (phoneCursor.moveToFirst()) {
-                String number = phoneCursor.getString(phoneCursor.getColumnIndex(
-                        ContactsContract.CommonDataKinds.Phone.NUMBER));
-                map.put("phone", number);
-            }
-
-            phoneCursor.close();
-            dataList.add(map);
-        }// end while
-        c.close();
-
-        // JSON 으로 변환
-        try {
-            jsonContacts = new JSONArray();//배열이 필요할때
-            for (int i = 0; i < dataList.size(); i++) {
-                JSONObject tempContacts = new JSONObject();//배열 내에 들어갈 json
-                tempContacts.put("name", dataList.get(i).get("name"));
-                tempContacts.put("phonenum", dataList.get(i).get("phone"));
-                jsonContacts.put(tempContacts);
-            }
-
-            Log.d("JSON Test", jsonContacts.toString());
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-//        출처: http://mainia.tistory.com/5673 [녹두장군 - 상상을 현실로]
+        Contacts contacts = new Contacts();
+        jsonContacts = contacts.getContacts();
 
         handler.post(new Runnable() {
             @Override

@@ -4,8 +4,9 @@
 
     <!-- 인터넷 설정 -->
     <uses-permission android:name="android.permission.INTERNET"/>
-    <!-- 사용자 주소록 리스트 가져오기 -->
+    <!-- 주소록 읽기/쓰기권한 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 
     <application
         android:allowBackup="true"

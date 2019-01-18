@@ -10,6 +10,14 @@
         function printContacts(json) {
             var jsonData = JSON.parse(json);
         }
+        function nextPage() {
+            var testName="갤러리호출";
+            var JsonData =
+            {
+                "test" : testName
+            };
+              common_movePage('gallery.html', JsonData);
+        }
     </script>
     <title></title>
 </head>
@@ -17,7 +25,7 @@
 <body>
 <button type="button" id="btContacts" onclick="callContacts()">연락처가져오기</button>
 <br>
-    <button type="button" id="btGallery"> 갤러리</button>
+    <button type="button" id="btGallery" onclick="nextPage()"> 갤러리</button>
 <br>
 <button type="button" id="btPush">푸시알림</button>
 </body>

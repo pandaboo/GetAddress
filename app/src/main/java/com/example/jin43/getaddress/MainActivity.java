@@ -140,11 +140,38 @@ public class MainActivity extends AppCompatActivity {
             mContext = c;
         }
 
+        /* 페이지 이동*/
+        @JavascriptInterface
+        public void movePage(final String url, final String json) {
+            Log.d("HYJ","아니여기까지 안들어오세여?????");
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if(json != null) {
+                        try {
+                            jsonData = new JSONObject(json);
+                            //Toast.makeText(mContext, json, Toast.LENGTH_SHORT).show();
+                        }catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    web.loadUrl("file:///android_asset/html/" + url); // url로 페이지 이동
+                }
+            });
+        }
+
         /* 전화번호부 가져오기*/
         @JavascriptInterface
         public void callContacts() {
             Log.d("JJKIM", "Web JS에서 MainActivity쪽 function 호출");
             getNativeContacts();
+        }
+
+        /*갤러리 이동*/
+        @JavascriptInterface
+        public void callGallery() {
+            Log.d("HYJ", "Web JS에서 MainActivity쪽 function 호출");
+            web.loadUrl("file:///android_asset/html/gallery.html"); // 처음 로드할 페이지
         }
 
         /* 푸시알림*/

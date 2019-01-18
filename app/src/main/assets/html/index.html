@@ -8,22 +8,6 @@
     <script src="../js/common.js"></script>
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css">
     <script src="../js/jquery.mobile-1.4.5.js"></script>
-
-    <script language = "javascript">
-
-        function printContacts(json) {
-            var jsonData = JSON.parse(json);
-        }
-        function nextPage() {
-            var testName="갤러리호출";
-            var JsonData =
-            {
-                "test" : testName
-            };
-               <!--common_movePage('gallery.html', JsonData);-->
-                window.android.movePage('gallery.html', JSON.stringify(JsonData));
-        }
-    </script>
     <title></title>
 </head>
 
@@ -34,7 +18,7 @@
         <button type="button" id="btContacts" onclick="callContacts()">연락처가져오기</button>
     </div>
     <div class="content" data-role="content">
-        <button type="button" id="btGallery" onclick="nextPage()"> 갤러리</button>
+        <button type="button" id="btGallery" onclick="common_movePage('gallery.html')"> 갤러리</button>
     </div>
     <div class="content" data-role="content">
         <button type="button" id="btPush">푸시알림</button>

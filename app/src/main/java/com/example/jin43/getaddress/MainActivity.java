@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
         webSet.setSavePassword                          (false); // 암호를 저장하지 않는다.
         webSet.setLayoutAlgorithm                       (WebSettings.LayoutAlgorithm.SINGLE_COLUMN); // 컨텐츠 사이즈 맞추기
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            web.setWebContentsDebuggingEnabled(true); 				//API 레벨 19부터 이용 가능.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            web.setWebContentsDebuggingEnabled(true);             //API 레벨 21부터 이용 가능.
         }
         web.addJavascriptInterface(new WebAppInterface(this), "android");
 

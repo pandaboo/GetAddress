@@ -1,9 +1,8 @@
 package Component;
 
-import android.content.ContentProviderOperation;
-import android.content.OperationApplicationException;
+import android.content.Intent;
 import android.database.Cursor;
-import android.os.RemoteException;
+import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,6 +15,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/* 작성자 : 김정진
+ * Native 전화번호부에서 이름과 전화번호 가져오기
+ * 참고한 블로그 : http://mainia.tistory.com/4924 [녹두장군 - 상상을 현실로]
+ */
 public class Contacts extends AppCompatActivity {
 
     public JSONArray getContacts() {
@@ -74,61 +77,15 @@ public class Contacts extends AppCompatActivity {
         return jsonContacts;
     }
 
-//    public void addContacts() {
-//        new Thread(){
-//            @Override
-//            public void run() {
-//
-//                ArrayList<ContentProviderOperation> list = new ArrayList<>();
-//                try{
-//                    list.add(
-//                            ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
-//                                    .withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null)
-//                                    .withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null)
-//                                    .build()
-//                    );
-//
-//                    list.add(
-//                            ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-//                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-//
-//                                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
-//                                    .withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, "홍길동")   //이름
-//
-//                                    .build()
-//                    );
-//
-//                    list.add(
-//                            ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-//                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-//
-//                                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
-//                                    .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, "010-1234-5678")           //전화번호
-//                                    .withValue(ContactsContract.CommonDataKinds.Phone.TYPE  , ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)   //번호타입(Type_Mobile : 모바일)
-//
-//                                    .build()
-//                    );
-//
-//                    list.add(
-//                            ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI)
-//                                    .withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0)
-//
-//                                    .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Email.CONTENT_ITEM_TYPE)
-//                                    .withValue(ContactsContract.CommonDataKinds.Email.DATA  , "hong_gildong@naver.com")  //이메일
-//                                    .withValue(ContactsContract.CommonDataKinds.Email.TYPE  , ContactsContract.CommonDataKinds.Email.TYPE_WORK)     //이메일타입(Type_Work : 직장)
-//
-//                                    .build()
-//                    );
-//
-//                    getApplicationContext().getContentResolver().applyBatch(ContactsContract.AUTHORITY, list);  //주소록추가
-//                    list.clear();   //리스트 초기화
-//                }catch(RemoteException e){
-//                    e.printStackTrace();
-//                }catch(OperationApplicationException e){
-//                    e.printStackTrace();
-//                }
-//            }
-//        }.start();
-////    출처: http://ghj1001020.tistory.com/4 [혁준 블로그]
-//    }
+    public Contacts() {
+        super();
+    }
+
+    public void callPhone(String phoneNum) {
+        String pNum;
+        pNum = phoneNum.replaceAll("-","");
+        Log.d("JJKIM","Contacts클래스 callPhone()메소드 전화번호 : " + pNum);
+        Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + pNum));
+        startActivity(intent);
+    }
 }

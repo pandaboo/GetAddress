@@ -1,4 +1,3 @@
-
 function common_movePage(url, jsonData) {
 
         if(jsonData != null) {

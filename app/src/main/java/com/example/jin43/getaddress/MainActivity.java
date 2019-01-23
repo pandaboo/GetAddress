@@ -27,10 +27,6 @@ import java.io.File;
 
 import Component.Contacts;
 
-/* 작성자 : 김정진
- * Native 전화번호부에서 이름과 전화번호 가져오기
- * 참고한 블로그 : http://mainia.tistory.com/4924 [녹두장군 - 상상을 현실로]
- */
 public class MainActivity extends AppCompatActivity {
 
     WebView web; // 웹뷰 선언
@@ -195,6 +191,14 @@ public class MainActivity extends AppCompatActivity {
         @JavascriptInterface
         public void callPush() {
             Log.d("JJKIM", "push 메소드 호출");
+        }
+
+        /* 전화걸기 */
+        @JavascriptInterface
+        public void callPhone(String phoneNum) {
+            Log.d("JJKIM", "[전화걸기] 전화번호 : "+ phoneNum);
+            Contacts contacts = new Contacts();
+            contacts.callPhone(phoneNum);
         }
     }
 

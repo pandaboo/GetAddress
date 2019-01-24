@@ -44,16 +44,6 @@ function phoneCall(){
         });
     }
 
-    function sucessFncMultiSndSample(result) {
-        console.log("sucessFncMultiSndSample>>>>>" + JSON.stringify(result));
-        ajaxResult = JSON.stringify(result);
-        console.log("ajaxResult>>>>>"+ajaxResult);
-    }
-
-    function errorFncMultiSndSample(result) {
-        console.log("errorFncMultiSndSample>>>>>>" + JSON.stringify(result));
-    }
-
      //////////////////////////////////////////////////////////////
      // 웹서버 통신 END
      ///////////////////////////////////////////////////////////////

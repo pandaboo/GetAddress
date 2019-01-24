@@ -5,34 +5,16 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no,target-densitydpi=medium-dpi">
     <!--    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>-->
     <script src="http://code.jquery.com/jquery-1.12.1.min.js"></script>
-    <script src="../js/common.js"></script>
+    <script src="../JS/common.js"></script>
     <link rel="stylesheet" href="../css/jquery.mobile-1.4.5.css">
-    <script src="../js/jquery.mobile-1.4.5.js"></script>
+    <script src="../JS/jquery.mobile-1.4.5.js"></script>
 
     <script language = "javascript">
-
-
-    function multiSndSample() {
-        var com_val  = [] ;
-        $("input[name='com_code']").each(function (key, value) {
-            if($(this).prop("checked") == true) {
-                com_val.push($(this).val());
-            }
-        });
-
-        var params = {
-                        com_code : com_val,
-                        project_code : "NHBANK_2017_05_1"
-                     };
-
-        navigate(params, "template.json", sucessFncMultiSndSample, errorFncMultiSndSample);
-
-        console.log(">>>>>22222222" + ajaxResult);
-
-    }
-
-    console.log(">>>>>3333" + ajaxResult);
-
+            $(function(){
+                $('#camera').change(function(e){
+                    $('#pic').attr('src', URL.createObjectURL(e.target.files[0]));
+                });
+            });
    </script>
 </head>
 
@@ -41,35 +23,11 @@
     <input type="file" id="camera" name="camera" capture="camera" accept="image/*" />
     <br/>
     <img id="pic" style="width:50%; high:50%;"/>
-    <button type="button" id="imgSend" onclick="imgSend()">사진 내보내기</button>
-    <button type="button" id="mailSend" onclick="emailSend()">메일 보내기</button>
-    <button type="button" id="addSearch" onclick="addSearch()">주소찾기</button>
+    <br/>
     <a href='tel:012-345-6789'>0123456789</a><br/>
+    <br/>
     <a href='mailto:hyjlm92@naver.com'>hyjlm92@naver.com</a>
 
-
-    <input type="text" required class="form-control" placeholder="아이디를 입력해주세요"  id="id" name="id" value=""/>
-    <input type="password"  required class="form-control" placeholder="비밀번호를 입력해주세요" id="pw" name="pw" />
-    <button id="login" onclick="javascript:multiSndSample(); return false;">로그인</button>
-
-    <input type="hidden" name="testName" value="1" />
-    <input type="hidden" name="testName" value="2" />
-    <input type="hidden" name="testName" value="3" />
-    <input type="hidden" name="testName" value="4" />
-
-
-    <table>
-        <tr>
-            <th>project_name</th>
-            <th>start_ymd</th>
-            <th>end_ymd</th>
-        </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
 </div>
 </body>
 </html>

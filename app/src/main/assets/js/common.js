@@ -47,3 +47,29 @@ function phoneCall(){
      //////////////////////////////////////////////////////////////
      // 웹서버 통신 END
      ///////////////////////////////////////////////////////////////
+
+    //sessionStorage에 jsonObject 형식의 데이터를 key/value로 저장
+    function setStorageItem(param, key){
+
+        var setItem = JSON.stringify(param);
+
+        console.log("set_key: "+key+" setValue: "+setItem);
+
+        sessionStorage.setItem(key,setItem);
+
+    }
+
+    //sessionStorage에 저장된 특정 key값의 데이터 반환
+    function getStorageItem(key){
+
+        var result = "";
+
+        if(key != null && key != ""){
+            result = sessionStorage.getItem(key);
+            sessionStorage.removeItem(key);
+        }
+
+        console.log("get_key: "+key+" getValue: "+result);
+
+        return result;
+    }
